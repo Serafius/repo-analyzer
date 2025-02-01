@@ -4,12 +4,13 @@ from .routers import deepseek_router
 import uvicorn
 from dotenv import load_dotenv
 import os
+from .lifespan import app_lifespan
 
 load_dotenv()
 PORT = int(os.getenv("PORT", 3001))
 
 
-app = FastAPI()
+app = FastAPI(lifespan=app_lifespan)
 origins = ["*"]
 
 app.add_middleware(

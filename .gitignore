@@ -12,3 +12,4 @@ generated-videos/
 # Production
 run/
 logs/
+model/
