@@ -3,8 +3,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from dotenv import load_dotenv
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from utils.fetch_repo import fetch_github_repo_details
 import torch
 import os
+
 
 load_dotenv()
 
@@ -35,8 +37,11 @@ async def app_lifespan(app: FastAPI):
     tokenizer = AutoTokenizer.from_pretrained(
         model_name, trust_remote_code=True, token=HF_TOKEN
     )
+    print("Fetching repo details...")
+    repo = await fetch_github_repo_details("Serafius", "car-dodge-game")
 
     # Attach model and tokenizer to app state
+    app.state.repo = repo
     app.state.model = model
     app.state.tokenizer = tokenizer
     print("Model and tokenizer loaded successfully!")
