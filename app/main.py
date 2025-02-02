@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import deepseek_router
+from .routers import manage_router
+
 import uvicorn
 from dotenv import load_dotenv
 import os
@@ -23,6 +25,7 @@ app.add_middleware(
 
 
 app.include_router(deepseek_router, prefix="/deepseek")
+app.include_router(manage_router, prefix="/manage")
 
 
 @app.get("/")
