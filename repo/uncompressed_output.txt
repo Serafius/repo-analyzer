@@ -1,0 +1,109 @@
+<source type="github_repository" url="https://github.com/Serafius/car-dodge-game">
+<file name="README.md">
+# Car dodge game
+
+Drive your car with dodging other cars coming towards yours
+
+## Description
+
+You are driving a car in an opposite direction so you will have to dodge other cars.
+This is a web project written in Javascript &amp; HTML.
+The game screen used canvas and Simple javascript script
+The cars' speeds and the new spawn location are random
+
+## Getting Started
+When you open the link "http://car-dodge-game.eu5.org"
+The cars starts moving towards you and you have to go right (right arrow key or D) or left (left arrow key or A) to dodge them,
+and by the time passing without crashing you will get more points. When you crash into another car you will get a message with your final score in it.
+That message also have a button to reset the game.
+
+### Installing
+
+You can download both files index.html and sketch.js
+I recommend downloading the zip of the project from github with the img folder
+There is no additional downloads needed.
+Open the index.html file and the program will run locally.
+
+### Executing program
+
+* Open the link "http://car-dodge-game.eu5.org"
+* Start moving your car using arrow keys or A and D
+* Press 'Play Again' button to restart
+
+## Help
+
+- The game screen might be bigger than your browser screen so I recommend zooming out or playing on fullscreen by pressing f11
+- The cars might be near to eachother so its impossible to dodge at the start of the game,
+just try again and it will reset.
+
+
+## Authors
+Iman Bassimeh
+
+</file>
+<file name="index.html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;style&gt;
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      #score {
+        position: absolute;
+        top: 0;
+        left: 800;
+        z-index: 100;
+      }
+      #canvas {
+        position: relative;
+        background: url('img/road.jpg');
+      }
+      .modal {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        place-content: center;
+      }
+      .modal div {
+        display: inline-block;
+        background: #ddd;
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+      .modal div button {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 1rem;
+        background: tomato;
+      }
+    &lt;/style&gt;
+    &lt;script defer src="sketch.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;section class="modal"&gt;
+      &lt;div&gt;
+        &lt;h1&gt;Game Over !!&lt;/h1&gt;
+        &lt;div&gt;You Scored &lt;span id="gameScore"&gt;0&lt;/span&gt;&lt;/div&gt;
+        &lt;button&gt;Play Again&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;canvas /&gt;
+    &lt;div id="score" /&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+</file>
+</source>

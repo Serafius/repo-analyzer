@@ -10,7 +10,7 @@ from transformers import (
 load_dotenv()
 HF_TOKEN = str(os.getenv("HF_TOKEN"))
 
-model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
 use_4bit = True
 bnb_4bit_compute_dtype = "float16"
 bnb_4bit_quant_type = "nf4"
@@ -22,6 +22,7 @@ offload_dir = os.path.abspath(os.path.join(save_dir, "offload_weights"))
 
 def load():
     try:
+        return 
         os.makedirs(save_dir, exist_ok=True)
         os.makedirs(offload_dir, exist_ok=True)
         print("CUDA Available:", torch.cuda.is_available())
@@ -60,4 +61,3 @@ def load():
         print("Error loading model")
         return error
 
-load()

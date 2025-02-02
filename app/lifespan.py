@@ -9,9 +9,15 @@ import os
 load_dotenv()
 
 PORT = int(os.getenv("PORT", 3001))
+HF_TOKEN = str(os.getenv("HF_TOKEN"))
 
 model_path = os.path.abspath(os.path.join(os.getcwd(), "model"))
 offload_dir = os.path.abspath(os.path.join(model_path, "offload_weights"))
+
+
+model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+device_map = "auto"
+
 
 @asynccontextmanager
 async def app_lifespan(app: FastAPI):
@@ -22,12 +28,13 @@ async def app_lifespan(app: FastAPI):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Loading model on {device}...")
     model = AutoModelForCausalLM.from_pretrained(
-        model_path,
-        device_map="auto",
-        offload_folder=offload_dir,
-        torch_dtype=torch.float16,
+        model_name,
+        device_map=device_map,
+        token=HF_TOKEN,
     )
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_name, trust_remote_code=True, token=HF_TOKEN
+    )
 
     # Attach model and tokenizer to app state
     app.state.model = model
