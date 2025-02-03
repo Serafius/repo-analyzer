@@ -123,3 +123,44 @@ def error_handler_response(evaluations):
     content += "</div></body></html>"
 
     return content
+
+def roadmap_content(message):
+    return f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Roadmap</title>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    margin: 40px;
+                    background-color: #f9f9f9;
+                }}
+                .container {{
+                    max-width: 800px;
+                    margin: auto;
+                    background-color: #fff;
+                    padding: 20px;
+                    border-radius: 5px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }}
+                h1 {{
+                    text-align: center;
+                    color: #333;
+                }}
+                p {{
+                    line-height: 1.6;
+                    color: #555;
+                    white-space: pre-wrap;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Roadmap details</h1>
+                <p>{message}</p>
+            </div>
+        </body>
+        </html>
+        """

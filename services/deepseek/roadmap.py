@@ -14,7 +14,7 @@ async def roadmap(request: Request):
         with open(file_path, "r", encoding="utf-8") as file:
             file_content = file.read()
 
-        feedback_prompt = "Analyze the given code repository to generate a structured product roadmap. The roadmap should be divided into short-term (0-3 months), mid-term (3-6 months), and long-term (6+ months) goals."
+        feedback_prompt = "Analyze the given code repository to generate a structured product roadmap in markdown language. The roadmap should be divided into short-term (0-3 months), mid-term (3-6 months), and long-term (6+ months) goals."
 
         prompt = f"{file_content}\n\n{feedback_prompt}"
 
@@ -22,13 +22,13 @@ async def roadmap(request: Request):
         tokenizer = request.app.state.tokenizer
 
         input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(model.device)
-        input_length = input_ids.shape[1]  # Number of tokens in the prompt
+        input_length = input_ids.shape[1]
 
         model.generation_config.pad_token_id = tokenizer.pad_token_id
 
         output = model.generate(
             input_ids=input_ids,
-            max_new_tokens=1000,
+            max_new_tokens=800,
             temperature=0.7,
             top_k=50,
             top_p=0.95,
