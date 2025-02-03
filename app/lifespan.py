@@ -38,7 +38,7 @@ async def app_lifespan(app: FastAPI):
     tokenizer = AutoTokenizer.from_pretrained(
         model_name, trust_remote_code=True, token=HF_TOKEN
     )
-    print("Fetching repo details...", repo_link.split("/")[-2], repo_link.split("/")[-1])
+    print("Fetching repo details...")
     repo = await fetch_github_repo_details(repo_link.split("/")[-2], repo_link.split("/")[-1])
     repo_tree = await fetch_github_repo_tree(repo.repo_owner, repo.repo_name, repo.sha)
     compress_repo(repo_link)

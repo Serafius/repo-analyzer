@@ -67,8 +67,6 @@ def process_directory(url, output):
             continue  # Skip excluded directories
 
         if file["type"] == "file" and is_allowed_filetype(file["name"]):
-            print(f"Processing {file['path']}...")
-
             temp_file = f"temp_{file['name']}"
             download_file(file["download_url"], temp_file)
 
@@ -94,8 +92,6 @@ def process_local_directory(local_path, output):
 
         for file in files:
             if is_allowed_filetype(file):
-                print(f"Processing {os.path.join(root, file)}...")
-
                 output.write(f"# {'-' * 3}\n")
                 output.write(f"# Filename: {os.path.join(root, file)}\n")
                 output.write(f"# {'-' * 3}\n\n")
@@ -140,13 +136,9 @@ def process_github_repo(repo_url):
         files = response.json()
 
         for file in files:
-            print(file["type"] == "file")
             if file["type"] == "dir" and file["name"] in EXCLUDED_DIRS:
                 continue
-
             if file["type"] == "file" and is_allowed_filetype(file["name"]):
-
-                print(f"Processing {file['path']}...")
 
                 temp_file = f"temp_{file['name']}"
                 download_file(file["download_url"], temp_file)
