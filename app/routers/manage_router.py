@@ -4,6 +4,6 @@ from services import list as listOptions
 
 router = APIRouter()
 
-@router.get("/list")
+@router.get("/")
 async def list(response: ResponseModel = Depends(listOptions)):
     return response

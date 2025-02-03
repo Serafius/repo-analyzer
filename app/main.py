@@ -25,7 +25,7 @@ app.add_middleware(
 
 
 app.include_router(deepseek_router, prefix="/deepseek")
-app.include_router(manage_router, prefix="/manage")
+app.include_router(manage_router, prefix="/home")
 
 
 @app.get("/")
