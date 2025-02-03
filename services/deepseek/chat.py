@@ -27,7 +27,7 @@ async def chat(request: Request):
 
         output = model.generate(
             input_ids=input_ids,
-            max_new_tokens=500,
+            max_new_tokens=1000,
             temperature=0.7,
             top_k=50,
             top_p=0.95,

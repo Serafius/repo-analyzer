@@ -114,11 +114,12 @@ def error_handler_response(evaluations):
             </style>
         </head>
         <body>
+        <div class="container">
             <h1>Error Evaluations</h1>
         """
     for evaluation in evaluations:
         content += f"<h2>Error:</h2><p>{evaluation['error']}</p>"
         content += f"<h3>Evaluation:</h3><p>{evaluation['evaluation']}</p><hr/>"
-    content += "</body></html>"
+    content += "</div></body></html>"
 
     return content
