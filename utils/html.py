@@ -81,20 +81,39 @@ def html_content(message):
         </html>
         """
 
+
 def error_handler_response(evaluations):
     content = """
+    <!DOCTYPE html>
         <html>
-          <head>
+        <head>
+            <meta charset="utf-8">
+                    </head>
             <title>Error Evaluations</title>
             <style>
-              body { font-family: Arial, sans-serif; margin: 20px; }
-              h1 { color: #333; }
-              h2 { color: #555; }
-              p { line-height: 1.6; }
-              hr { margin: 20px 0; }
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                h2 { color: #555; }
+                hr { margin: 20px 0; }
+                .container {{
+                    max-width: 800px;
+                    margin: auto;
+                    background-color: #fff;
+                    padding: 20px;
+                    border-radius: 5px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }}
+                h1 {{
+                    text-align: center;
+                    color: #333;
+                }}
+                p {{
+                    line-height: 1.6;
+                    color: #555;
+                    white-space: pre-wrap;
+                }}
             </style>
-          </head>
-          <body>
+        </head>
+        <body>
             <h1>Error Evaluations</h1>
         """
     for evaluation in evaluations:
