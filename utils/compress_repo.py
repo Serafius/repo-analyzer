@@ -140,6 +140,7 @@ def process_github_repo(repo_url):
         files = response.json()
 
         for file in files:
+            print(file["type"] == "file")
             if file["type"] == "dir" and file["name"] in EXCLUDED_DIRS:
                 continue
 
@@ -626,15 +627,15 @@ def is_allowed_filetype(filename):
 
     # Then check if it has an allowed extension
     allowed_extensions = [
-        '.go',
-        '.proto',
+        '.js',
+        '.ts',
         '.py',
         '.txt',
         '.md',
         '.cjs',
         '.html',
-        '.json',
-        '.ipynb',
+        '.env',
+        '.css',
         '.h',
         '.localhost',
         '.yaml',
@@ -643,106 +644,27 @@ def is_allowed_filetype(filename):
 
     return any(filename.endswith(ext) for ext in allowed_extensions)
 
-def main():
-    console = Console()
-
-    intro_text = Text("\nInput Paths or URLs Processed:\n", style="dodger_blue1")
-    input_types = [
-        ("• Local folder path (flattens all files into text)", "bright_white"),
-        ("• GitHub repository URL (flattens all files into text)", "bright_white"),
-        ("• GitHub pull request URL (PR + Repo)", "bright_white"),
-        ("• GitHub issue URL (Issue + Repo)", "bright_white"),
-        ("• Documentation URL (base URL)", "bright_white"),
-        ("• YouTube video URL (to fetch transcript)", "bright_white"),
-        ("• ArXiv Paper URL", "bright_white"),
-        ("• DOI or PMID to search on Sci-Hub", "bright_white"),
-    ]
-
-    for input_type, color in input_types:
-        intro_text.append(f"\n{input_type}", style=color)
-
-    intro_panel = Panel(
-        intro_text,
-        expand=False,
-        border_style="bold",
-        title="[bright_white]Copy to File and Clipboard[/bright_white]",
-        title_align="center",
-        padding=(1, 1),
-    )
-    console.print(intro_panel)
-
-    if len(sys.argv) > 1:
-        input_path = sys.argv[1]
-    else:
-        input_path = Prompt.ask("\n[bold dodger_blue1]Enter the path or URL[/bold dodger_blue1]", console=console)
+def compress_repo(repo_link):
+    input_path = repo_link
     
-    console.print(f"\n[bold bright_green]You entered:[/bold bright_green] [bold bright_yellow]{input_path}[/bold bright_yellow]\n")
+    output_file = "repo/uncompressed_output.txt"
+    processed_file = "repo/compressed_output.txt"
 
-    output_file = "uncompressed_output.txt"
-    processed_file = "compressed_output.txt"
-    urls_list_file = "processed_urls.txt"
-
-    with Progress(
-        TextColumn("[bold bright_blue]{task.description}"),
-        BarColumn(bar_width=None),
-        TimeRemainingColumn(),
-        console=console,
-    ) as progress:
-
-        task = progress.add_task("[bright_blue]Processing...", total=100)
-
-        try:
-            if "github.com" in input_path:
-                if "/pull/" in input_path:
-                    final_output = process_github_pull_request(input_path)
-                elif "/issues/" in input_path:
-                    final_output = process_github_issue(input_path)
-                else:
-                    final_output = process_github_repo(input_path)
-            elif urlparse(input_path).scheme in ["http", "https"]:
-                if "youtube.com" in input_path or "youtu.be" in input_path:
-                    final_output = fetch_youtube_transcript(input_path)
-                elif "arxiv.org" in input_path:
-                    final_output = process_arxiv_pdf(input_path)
-                else:
-                    crawl_result = crawl_and_extract_text(input_path, max_depth=2, include_pdfs=True, ignore_epubs=True)
-                    final_output = crawl_result['content']
-                    with open(urls_list_file, 'w', encoding='utf-8') as urls_file:
-                        urls_file.write('\n'.join(crawl_result['processed_urls']))
-            elif input_path.startswith("10.") and "/" in input_path or input_path.isdigit():
-                final_output = process_doi_or_pmid(input_path)
+    try:
+        if "github.com" in input_path:
+            if "/pull/" in input_path:
+                final_output = process_github_pull_request(input_path)
+            elif "/issues/" in input_path:
+                final_output = process_github_issue(input_path)
             else:
-                final_output = process_local_folder(input_path)
+                final_output = process_github_repo(input_path)
+        else:
+            raise ValueError("Input URL is not a valid GitHub link")
 
-            progress.update(task, advance=50)
+        with open(output_file, "w", encoding="utf-8") as file:
+            file.write(final_output)
 
-            # Write the uncompressed output
-            with open(output_file, "w", encoding="utf-8") as file:
-                file.write(final_output)
+        preprocess_text(output_file, processed_file)
 
-
-            # Process the compressed output
-            preprocess_text(output_file, processed_file)
-
-            progress.update(task, advance=50)
-
-            compressed_text = safe_file_read(processed_file)
-            compressed_token_count = get_token_count(compressed_text)
-            console.print(f"\n[bright_green]Compressed Token Count:[/bright_green] [bold bright_cyan]{compressed_token_count}[/bold bright_cyan]")
-
-            uncompressed_text = safe_file_read(output_file)
-            uncompressed_token_count = get_token_count(uncompressed_text)
-            console.print(f"[bright_green]Uncompressed Token Count:[/bright_green] [bold bright_cyan]{uncompressed_token_count}[/bold bright_cyan]")
-
-            console.print(f"\n[bold bright_yellow]{processed_file}[/bold bright_yellow] and [bold bright_blue]{output_file}[/bold bright_blue] have been created in the working directory.")
-
-            pyperclip.copy(uncompressed_text)
-            console.print(f"\n[bright_white]The contents of [bold bright_blue]{output_file}[/bold bright_blue] have been copied to the clipboard.[/bright_white]")
-
-        except Exception as e:
-            console.print(f"\n[bold red]An error occurred:[/bold red] {str(e)}")
-            console.print("\nPlease check your input and try again.")
-            raise  # Re-raise the exception for debugging purposes
-        
-if __name__ == "__main__":
-    main()
+    except Exception as e:
+        raise e

@@ -1,109 +1,472 @@
-<source type="github_repository" url="https://github.com/Serafius/car-dodge-game">
+<source type="github_repository" url="https://github.com/Serafius/data-wallet-express">
+<file name=".env">
+PORT=5000
+UNSPLASH_ACCESS_KEY=LdA7w--7EFzJo552koTp0rB41pMbHtgmx5pFAt1eaKc
+UNSPLASH_SECRET_KEY=ZH35YG6WzBukA9tuy7efcO3BE_XwKY7SHF81ApfT_h4
+GOOGLE_CLIENT_ID=87720096176-3r5osj340hccnk1nao7f07trmimvqpcu.apps.googleusercontent.com
+</file>
 <file name="README.md">
-# Car dodge game
+&lt;div align='center'&gt;
+    &lt;h1&gt;&lt;b&gt;🗝️ [Data wallet] 🗝️&lt;/b&gt;&lt;/h1&gt;
+    &lt;img src='https://bernardmarr.com/img/blog/what-is-big-data.png' width='250' height='250' /&gt;
+    &lt;p&gt;Store your data securely and manage them easily.&lt;/p&gt;
 
-Drive your car with dodging other cars coming towards yours
+![JavaScript](https://badgen.net/badge/JavaScript/[version]/yellow?)
+![Node.js](https://badgen.net/badge/Node.js/[version]/green?)
+&lt;/div&gt;
 
-## Description
+---
 
-You are driving a car in an opposite direction so you will have to dodge other cars.
-This is a web project written in Javascript &amp; HTML.
-The game screen used canvas and Simple javascript script
-The cars' speeds and the new spawn location are random
+## 💾 **ABOUT**
 
-## Getting Started
-When you open the link "http://car-dodge-game.eu5.org"
-The cars starts moving towards you and you have to go right (right arrow key or D) or left (left arrow key or A) to dodge them,
-and by the time passing without crashing you will get more points. When you crash into another car you will get a message with your final score in it.
-That message also have a button to reset the game.
+this project is under **developement** and is available for testing - **private**
 
-### Installing
+Main points:
 
-You can download both files index.html and sketch.js
-I recommend downloading the zip of the project from github with the img folder
-There is no additional downloads needed.
-Open the index.html file and the program will run locally.
+- Structuring forms
+- User friendly
+- Secure data
 
-### Executing program
+feel free to try it out! `will be open source!`
 
-* Open the link "http://car-dodge-game.eu5.org"
-* Start moving your car using arrow keys or A and D
-* Press 'Play Again' button to restart
+&lt;br /&gt;
 
-## Help
+---
 
-- The game screen might be bigger than your browser screen so I recommend zooming out or playing on fullscreen by pressing f11
-- The cars might be near to eachother so its impossible to dodge at the start of the game,
-just try again and it will reset.
+## 🗒️ **INSTALLATION**
 
+### local installation:
 
-## Authors
-Iman Bassimeh
+1. clone the repo
+
+```
+git clone https://github.com/Serafius/data-wallet-express.git
+```
+
+2. cd into cloned repo ( or open it with IDE )
+
+```
+cd data-wallet-express
+```
+
+3. install dependencies
+
+```
+npm i
+```
+
+4. start the app
+   
+```
+npm start
+```
+
+5 you can access the app on
+
+```
+localhost:5000
+```
+
+&lt;br /&gt;
+
+---
+## 🔗 **API Routes**
+
+### User Routes
+
+- `GET` /api/user/search/:id
+  - find a user
+
+- `POST` /api/user/create
+  - Creates a new user
+
+### Script Routes
+
+- `GET` /script/test
+  - Test a random data
+
+&lt;br /&gt;
 
 </file>
-<file name="index.html">
-&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-  &lt;head&gt;
-    &lt;meta charset="UTF-8" /&gt;
-    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-    &lt;title&gt;Document&lt;/title&gt;
-    &lt;style&gt;
-      * {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-      }
-      #score {
-        position: absolute;
-        top: 0;
-        left: 800;
-        z-index: 100;
-      }
-      #canvas {
-        position: relative;
-        background: url('img/road.jpg');
-      }
-      .modal {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        display: none;
-        place-content: center;
-      }
-      .modal div {
-        display: inline-block;
-        background: #ddd;
-        padding: 1rem;
-        border-radius: 0.5rem;
-      }
-      .modal div button {
-        width: 100%;
-        padding: 1rem;
-        border: none;
-        border-radius: 1rem;
-        background: tomato;
-      }
-    &lt;/style&gt;
-    &lt;script defer src="sketch.js"&gt;&lt;/script&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;section class="modal"&gt;
-      &lt;div&gt;
-        &lt;h1&gt;Game Over !!&lt;/h1&gt;
-        &lt;div&gt;You Scored &lt;span id="gameScore"&gt;0&lt;/span&gt;&lt;/div&gt;
-        &lt;button&gt;Play Again&lt;/button&gt;
-      &lt;/div&gt;
-    &lt;/section&gt;
+<file name="app.js">
+import express from "express";
+import cors from "cors";
+import "dotenv/config";
 
-    &lt;canvas /&gt;
-    &lt;div id="score" /&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
+import { router } from "./routes/index.js";
+import { overrideLogs } from "./utilities/overrideLogs.js";
+import dataWalletDB from "./databases/data-wallet.js"
+
+const app = express();
+const port = process.env.PORT
+
+app.use(cors());
+overrideLogs();
+
+app.use("/", router);
+
+app.listen(port, () =&gt; {
+  console.log("Connected API to " + port);
+});
+
+</file>
+<file name="controllers/auth/google/createAuthUrl.js">
+import queryString from "query-string";
+
+export const createAuthUrl = (req, res) =&gt; {
+  try {
+    const stringifiedParams = queryString.stringify({
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      redirect_uri: "http://localhost:3000",
+      scope: [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+      ].join(" "), // space seperated string
+      response_type: "code",
+      access_type: "offline",
+      prompt: "consent",
+    });
+    const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`;
+    console.log(googleLoginUrl);
+    return res.status(200).json({ data: { url: googleLoginUrl }, err: null });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ data: null, err });
+  }
+};
+
+</file>
+<file name="controllers/auth/google/index.js">
+export { createAuthUrl } from "./createAuthUrl.js";
+
+</file>
+<file name="controllers/script/index.js">
+export { testConnection } from "./testConnection.js";
+
+</file>
+<file name="controllers/script/testConnection.js">
+import axios from "axios";
+
+export const testConnection = async (req, res) =&gt; {
+  try {
+    const { data: quoteData } = await axios.get(
+      "https://api.quotable.io/random",
+    );
+    const { data: imageData } = await axios.get(
+      "https://api.unsplash.com/photos/random",
+      {
+        headers: {
+          Authorization: "Client-ID " + process.env.UNSPLASH_ACCESS_KEY, // Replace 'your_unsplash_access_key' with your key
+        },
+      },
+    );
+    const { content, author } = quoteData;
+    const {
+      urls: { regular: imageUrl },
+    } = imageData;
+
+    res.send(`
+      &lt;html&gt; 
+        &lt;head&gt;
+          &lt;title&gt;Test Connection&lt;/title&gt;
+          &lt;style&gt;
+            body {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              background-color: #f8f9fa;
+              color: #343a40;
+              font-family: Arial, sans-serif;
+            }
+            .content {
+              text-align: center;
+              max-width: 80%;
+            }
+            .text {
+              font-size: 36px;
+              font-weight: bold;
+              margin-bottom: 20px;
+            }
+            .quote {
+              font-size: 24px;
+              margin-bottom: 10px;
+            }
+            .author {
+              font-size: 20px;
+              font-style: italic;
+              margin-bottom: 20px;
+            }
+            img {
+                width: 300px;
+                height: 200px;
+                object-fit: cover;
+              }
+          &lt;/style&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+          &lt;div class="content"&gt;
+            &lt;p class="text"&gt;Connection secured!&lt;/p&gt;
+            &lt;p class="quote"&gt;"${content}"&lt;/p&gt;
+            &lt;p class="author"&gt;- ${author}&lt;/p&gt;
+            &lt;img src="${imageUrl}" alt="Random Unsplash Image"&gt;
+          &lt;/div&gt;
+        &lt;/body&gt;
+      &lt;/html&gt;`);
+  } catch (error) {
+    console.error("Error fetching data", error);
+    res.status(500).send("Error fetching data");
+  }
+};
+
+</file>
+<file name="controllers/user/createUser.js">
+import { User } from "../../models/index.js";
+
+export const createUser = async (req, res) =&gt; {
+  const { name, email } = req.body;
+
+  try {
+    const user = await User.create({ name, email });
+    res.json({ data: { user, token }, err: null });
+  } catch (err) {
+    console.error("Error fetching data", err);
+    res.status(500).json({ data: null, err });
+  }
+};
+
+</file>
+<file name="controllers/user/getUser.js">
+import { User } from "../../models/index.js";
+
+export const getUser = async (req, res) =&gt; {
+  const { id } = req.params;
+
+  try {
+    if (id.length != 24) {
+      return res.status(400).json({ data: null, err: "id length incorrect" });
+    }
+    const user = await User.findById(id);
+    res.json({ data: { user }, err: null });
+  } catch (err) {
+    console.error("Error fetching data", err);
+    res.status(500).json({ data: null, err });
+  }
+};
+
+</file>
+<file name="controllers/user/index.js">
+export { getUser } from "./getUser.js";
+export { createUser } from "./createUser.js";
+
+</file>
+<file name="databases/data-wallet.js">
+import mongoose from "mongoose";
+
+const db = "mongodb://localhost:27017/data-wallet";
+
+const datawalletConnection = mongoose.createConnection(db, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+datawalletConnection.on("connected", () =&gt; {
+  console.log("Connected to database");
+});
+
+datawalletConnection.on("error", (err) =&gt; {
+  console.error("Error connecting to database:", err);
+});
+
+export default datawalletConnection;
+
+</file>
+<file name="models/Document.js">
+import { Schema } from "mongoose";
+import db from "../databases/data-wallet.js";
+
+const documentSchema = new Schema({
+  
+});
+
+export const Document = db.model("Document", documentSchema);
+
+</file>
+<file name="models/Form.js">
+import { Schema } from "mongoose";
+import db from "../databases/data-wallet.js";
+
+const fieldTypes = ["text", "radio", "check", "menu", "date", "number", "email", "textarea"];
+
+const formSchema = new Schema(
+  {
+    title: { type: String, required: true },
+    subtitle: { type: String },
+    details: { type: String },
+
+    sections: [
+      {
+        title: { type: String, required: true },
+        fields: [
+          {
+            label: { type: String, required: true },
+            type: { type: String, enum: fieldTypes, required: true },
+            required: { type: Boolean, default: false }, // Indicates if the field is required to be filled
+            options: { type: [String], required: function() { return ['radio', 'check', 'menu'].includes(this.type); } }, // Options for radio, check, and menu field types
+            default: { type: Schema.Types.Mixed }, // Default value for the field
+            placeholder: { type: String }, // Placeholder for the field
+          },
+        ],
+      }
+    ],
+    owner: { type: Schema.Types.ObjectId, ref: "User" },
+    isDeleted: { type: Boolean, default: false },
+  },
+  { timestamps: true },
+);
+
+export const Form = db.model("Form", formSchema);
+
+</file>
+<file name="models/User.js">
+import { Schema } from "mongoose";
+import db from "../databases/data-wallet.js";
+
+const loginMethods = [
+  "google",
+  "email",
+  "facebook",
+  "discord",
+  "twitter",
+  "instagram",
+];
+
+const userSchema = new Schema(
+  {
+    personalInfo: {
+      name: { type: String },
+      username: {
+        name: { type: String, required: true },
+        tag: { type: Number, required: true },
+      },
+      email: { type: String, required: true },
+      pictureUrl: { type: String },
+      about: { type: String },
+      timezone: { type: String },
+    },
+    credentials: {
+      ids: [{ type: Map, of: String }],
+      loginMethod: {
+        type: String,
+        enum: loginMethods,
+        default: loginMethods[0],
+      },
+      lastLogin: { type: Date },
+    },
+    auth: {
+      password: { type: String },
+    },
+    isDeleted: { type: Boolean, default: false },
+  },
+  { timestamps: true },
+);
+
+export const User = db.model("User", userSchema);
+
+</file>
+<file name="models/index.js">
+export { User } from "./User.js";
+
+</file>
+<file name="routes/api/auth/email.js">
+
+</file>
+<file name="routes/api/auth/google.js">
+import { Router } from "express";
+import { createAuthUrl } from "../../../controllers/auth/google/index.js";
+
+const router = Router();
+router.get("/callback", createAuthUrl)
+
+export default router;
+
+</file>
+<file name="routes/api/auth/index.js">
+import { Router } from "express";
+
+import google from "./google.js";
+
+const router = Router();
+router.use("/google", google);
+
+export default router;
+
+</file>
+<file name="routes/api/index.js">
+import { Router } from "express";
+
+import user from "./user.js";
+import auth from "./auth/index.js"
+
+const router = Router();
+router.use("/user", user).use("/auth", auth);
+
+export default router;
+</file>
+<file name="routes/api/user.js">
+import { Router } from "express";
+import { getUser, createUser } from "../../controllers/user/index.js";
+
+const router = Router();
+router.get("/search/:id", getUser).post("/create", createUser);
+
+export default router;
+
+</file>
+<file name="routes/index.js">
+import { Router } from "express";
+
+import script from "./script.js";
+import api from "./api/index.js";
+
+export const router = Router();
+router.use("/script", script).use("/api", api);
+
+</file>
+<file name="routes/script.js">
+import { Router } from "express";
+import {
+    testConnection,
+} from "../controllers/script/index.js";
+
+const router = Router();
+router
+  .get("/test", testConnection)
+
+export default router;
+
+</file>
+<file name="utilities/getTime.js">
+export const getTime = () =&gt; {
+  const now = new Date();
+  return `${now.getHours().toString().padStart(2, "0")}:${now
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`;
+};
+
+</file>
+<file name="utilities/overrideLogs.js">
+import { getTime } from "./getTime.js";
+
+export const overrideLogs = () =&gt; {
+  const originalLog = console.log;
+
+  console.log = function (...args) {
+    args.unshift(getTime() + " | ");
+    originalLog.apply(this, args);
+  };
+};
 
 </file>
 </source>
