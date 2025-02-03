@@ -1,6 +1,7 @@
 import os
 from fastapi import APIRouter, Request, status
 from fastapi.responses import HTMLResponse
+from utils.html import error_html, html_content
 
 router = APIRouter()
 
@@ -9,7 +10,7 @@ router = APIRouter()
 async def chat(request: Request):
     try:
         save_dir = os.path.abspath(os.path.join(os.getcwd(), "repo"))
-        file_path = os.path.join(save_dir, "compressed_output.txt" )
+        file_path = os.path.join(save_dir, "compressed_output.txt")
 
         with open(file_path, "r", encoding="utf-8") as file:
             file_content = file.read()
@@ -38,88 +39,9 @@ async def chat(request: Request):
         new_tokens = output[0][input_length:]
         generated_text = tokenizer.decode(new_tokens, skip_special_tokens=True)
 
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <title>Feedback Response</title>
-            <style>
-                body {{
-                    font-family: Arial, sans-serif;
-                    margin: 40px;
-                    background-color: #f9f9f9;
-                }}
-                .container {{
-                    max-width: 800px;
-                    margin: auto;
-                    background-color: #fff;
-                    padding: 20px;
-                    border-radius: 5px;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                }}
-                h1 {{
-                    text-align: center;
-                    color: #333;
-                }}
-                p {{
-                    line-height: 1.6;
-                    color: #555;
-                    white-space: pre-wrap;
-                }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1>Feedback Response</h1>
-                <p>{generated_text}</p>
-            </div>
-        </body>
-        </html>
-        """
-
         return HTMLResponse(content=html_content, status_code=status.HTTP_200_OK)
 
     except Exception as error:
-        error_html = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <title>Error</title>
-            <style>
-                body {{
-                    font-family: Arial, sans-serif;
-                    margin: 40px;
-                    background-color: #f9f9f9;
-                }}
-                .container {{
-                    max-width: 800px;
-                    margin: auto;
-                    background-color: #fff;
-                    padding: 20px;
-                    border-radius: 5px;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                }}
-                h1 {{
-                    text-align: center;
-                    color: red;
-                }}
-                p {{
-                    line-height: 1.6;
-                    color: #555;
-                    white-space: pre-wrap;
-                }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1>Error</h1>
-                <p>{str(error)}</p>
-            </div>
-        </body>
-        </html>
-        """
         return HTMLResponse(
             content=error_html, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
